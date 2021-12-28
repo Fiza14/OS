@@ -1,92 +1,85 @@
 #include<iostream>
+#include <unistd.h>
+
 
 using namespace std;
-#define chairs 5
 
-void delay()                                        //delay function
-{
-    for(int i=0; i<10000; i++)
-    {
-
-        for(int i=0; i<100000; i++)
-        {
-
-        }
-    }
+void delay() {
+   sleep(1.5);
 }
-int main()
-{
 
-    int customer=0; //No of waiting Customer
-    int barber=1;   // if value 1 barber is free else busy
-    int waiting=0;  //total waiting seats
-    int mutex=1;    //for mutual exclusion
-    int cust=0;
-    int ans=0,i=1;
+int customerArrival(int waiting, int chairs) {
+    delay();
+    if (waiting < chairs){
+        cout << "Customer Arrived to barber shop.." << endl;
+        waiting += 1;
+        cout << "Customer is waiting on the chair for barber.." << endl;
+    } else {
+        cout << "No chairs available to sit.." << endl;
+        cout << "Customer left.. " << endl;
+    }
 
-    cout<<"\nBarber is idle ";
+    cout << endl;
+    return waiting;
+}
 
-    cout<<"\nEnter the Max Waiting Chairs :";
-    cin>>waiting;
-    cout<<"\nEnter the Current Waiting Customer :";
-    cin>>customer;
+int main(){
+    int chairs;
+    int waiting;
 
+    bool isBarberSleeping = true;
 
-    while(1)
-    {
-        if(customer>0 && ans!=0){       //if there are waiting customer available
-           cout<<"\nBarber is idle ";
+    cout << "Enter number of chairs present in barber shop: ";
+    cin >> chairs;
+
+    cout << "Enter number of currently waiting customers in barber shop: ";
+    cin >> waiting;
+
+    cout << endl;
+
+    while (true) {
+        int hasCustomerArrived;
+        cout << "Has new Customer Arrived? [0/1]: ";
+        cin >> hasCustomerArrived;
+        cout << endl;
+
+        if (hasCustomerArrived == 1) {
+            waiting = customerArrival(waiting, chairs);
         }
-        else if(customer<1)             //if there are no waiting customer
-        {
-            cout<<"\n\nNo waiting Customer ";
-            cout<<"\nBarber is idle";
-        }
-        ans=1;
-        cout<<"\n\nCustomer Arrived : ";cin>>cust;    //checking if new customer arrived thus taking the input
-        if((customer+cust)>=waiting)                            //if Customer == waiting chairs do not take new customer
-        {
-            cout<<"No more waiting seats available :";
-            customer=waiting;
-        }
-        else
-        {
-        customer=customer+cust;
-        }
-        cout<<"\n\nWaiting Customers : "<<customer;     //Displaying waiting customers after adding new to it
 
-        if(customer>0)                          //if there are waiting customer
-        {
+        if (waiting < 0) {
             delay();
-            if(mutex)                        //if there is no customer inside send waiting customer
-            {
-                mutex=0;                        //customer is inside no close the gate for other customers
-                delay();
-                cout<<"\nBarber Awakes ";       //seeing the customer entered barber awakes
-                customer--;                     //reducing one waiting customer
-                barber=1;                      //seeing the customer entered barber awakes
-                delay();
-                cout<<"\nAccess granted for the customer "<<i;
-            }
-            if(barber)                              //if barber awakes he is busy cutting hairs
-            {
-                delay();
-                cout<<"\nBarber is Busy Cutting Hair ";
-                delay();
-                delay();
-                cout<<"\nCustomer "<<i<<" Released";    //customer released
-                i++;
-                delay();
-                barber=0;                               //barber is idle
-                mutex=1;                                //gate opened fro waiting customer to come inside
-
-            }
-        }
-        else                                           //if no waiting customer end program
-        {
+            cout << "No customer is waiting for barber.." << endl;
+            cout << "Barber is leaving.." << endl;
             break;
         }
 
+        else if (waiting == 0) {
+            delay();
+            cout << "No customer is waiting.." << endl;
+            isBarberSleeping = true;
+            cout << "Barber Slept.." << endl;
+            cout << endl;
+        }
+
+        else if (isBarberSleeping) {
+            delay();
+            cout << "Waking up barber.." << endl;
+            isBarberSleeping = false;
+        }
+
+        if (!isBarberSleeping && waiting > 0) {
+            delay();
+            cout << "Customer is having his haircut.." << endl;
+            delay();
+            cout << "Haircut Finished.." << endl;
+            cout << "Barber is Idle" << endl;
+
+            cout << endl;
+        }
+
+        waiting--;
     }
 
+	return 0;
 }
