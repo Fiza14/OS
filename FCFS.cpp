@@ -1,33 +1,45 @@
 #include<iostream>
+ 
 using namespace std;
-
+ 
 int main()
 {
-
-    int arr[100],no,wt=0,tat=0,avg1=0,avg2=0;
-    char name[100];
-    cout<<"Enter the number of the process :";
-    cin>>no;
-
-    for(int i=0;i<no;i++)
+    int n,bt[20],wt[20],tat[20],avwt=0,avtat=0,i,j;
+    cout<<"Enter total number of processes:";
+    cin>>n;
+ 
+    cout<<"\nEnter Process Burst Time\n";
+    for(i=0;i<n;i++)
     {
-
-        cout<<"\nEnter the Name of the Process "<<i+1<<" :";
-        cin>>name[i];
-        cout<<"\nEnter the Burst Time for the Process :";
-        cin>>arr[i];
-
+        cout<<"P["<<i+1<<"]:";
+        cin>>bt[i];
     }
-
-    cout<<"\nProcess\tBT\tWT\tAT\n";
-    for(int i=0;i<no;i++)
+ 
+    wt[0]=0;    //waiting time for first process is 0
+ 
+    //calculating waiting time
+    for(i=1;i<n;i++)
     {
-        int curr = wt+arr[i];
-        cout<<name[i]<<"\t"<<arr[i]<<"\t"<<wt<<"\t"<<curr;
-        wt=wt+arr[i];
-        cout<<endl;
+        wt[i]=0;
+        for(j=0;j<i;j++)
+            wt[i]+=bt[j];
     }
-
-
-
+ 
+    cout<<"\nProcess\t\tBurst Time\tWaiting Time\tTurnaround Time";
+ 
+    //calculating turnaround time
+    for(i=0;i<n;i++)
+    {
+        tat[i]=bt[i]+wt[i];
+        avwt+=wt[i];
+        avtat+=tat[i];
+        cout<<"\nP["<<i+1<<"]"<<"\t\t"<<bt[i]<<"\t\t"<<wt[i]<<"\t\t"<<tat[i];
+    }
+ 
+    avwt=avwt/n;
+    avtat=avtat/n;
+    cout<<"\n\nAverage Waiting Time:"<<avwt;
+    cout<<"\nAverage Turnaround Time:"<<avtat;
+ 
+    return 0;
 }
