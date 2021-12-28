@@ -36,7 +36,11 @@ int main()
 			cin>>max[i][j];
 		}
 	}
-	
+
+
+	//find sum_of_allocated resources 
+	// avial = total_resources - sum_of_allocated 
+	// update here Available Resources accordingly 
 	int avail[3] = { 3, 3, 2 }; // Available Resources
 	
 	//making all false
